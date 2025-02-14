@@ -1,5 +1,4 @@
-// const map = L.map("map").setView([35.669400214188606, 139.48343915372877], 11);
-const map = L.map("map").setView([35.781351, 139.813395], 13);
+const map = L.map("map").setView([35.781351, 139.813395], 13); // 中心は一ツ家
 
 // 背景地図はOpenStreetMap
 const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -79,30 +78,56 @@ function getGeoJsonStyle(progress) {
 let areaList;
 let progress;
 
-Promise.all([getAreaList(), getProgress(), getProgressCountdown()]).then(function(res) {
+Promise.all([getPostingList(), getPostingProgress(), getProgressCountdown()]).then(function(res) {
   areaList = res[0];
   progress = res[1];
   progressCountdown = res[2];
 
   for (let [key, areaInfo] of Object.entries(areaList)) {
     console.log(areaInfo['area_name']);
-    fetch(`https://uedayou.net/loa/東京都足立区${areaInfo['area_name']}.geojson`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Failed to fetch geojson for ${areaInfo['area_name']}`);
+    console.log(areaInfo['area_cho_max_number']);
+    let cho_max_number = Number(areaInfo['area_cho_max_number']);
+    for(let cho_index = 0; cho_index < cho_max_number; cho_index++){
+    let cho_number = cho_index + 1;
+    if(cho_max_number === 1){
+            fetch(`https://uedayou.net/loa/東京都足立区${areaInfo['area_name']}.geojson`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`Failed to fetch geojson for ${areaInfo['area_name']}`);
+              }
+              return response.json();
+            })
+            .then((data) => {
+              const polygon = L.geoJSON(data, {
+                style: getGeoJsonStyle(progress[key]),
+              });
+              polygon.bindPopup(`<b>${areaInfo['area_name']}</b><br>ポスター貼り進捗: ${(progress[key]*100).toFixed(1)}%<br>残り: ${progressCountdown[key]}ヶ所`);
+              polygon.addTo(map);
+            })
+            .catch((error) => {
+              console.error('Error fetching geojson:', error);
+            });   
+            break;
+        }else{
+            fetch(`https://uedayou.net/loa/東京都足立区${areaInfo['area_name']}${cho_number}丁目.geojson`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`Failed to fetch geojson for ${areaInfo['area_name']}${cho_number}丁目`);
+              }
+              return response.json();
+            })
+            .then((data) => {
+              const polygon = L.geoJSON(data, {
+                style: getGeoJsonStyle(progress[key]),
+              });
+              polygon.bindPopup(`<b>${areaInfo['area_name']}${cho_number}丁目</b><br>ポスティング進捗: ${(progress[key]*100).toFixed(1)}%<br>残り: ${progressCountdown[key]}枚`);
+              polygon.addTo(map);
+            })
+            .catch((error) => {
+              console.error('Error fetching geojson:', error);
+            }); 
         }
-        return response.json();
-      })
-      .then((data) => {
-        const polygon = L.geoJSON(data, {
-          style: getGeoJsonStyle(progress[key]),
-        });
-        polygon.bindPopup(`<b>${areaInfo['area_name']}</b><br>ポスター貼り進捗: ${(progress[key]*100).toFixed(1)}%<br>残り: ${progressCountdown[key]}ヶ所`);
-        polygon.addTo(map);
-      })
-      .catch((error) => {
-        console.error('Error fetching geojson:', error);
-      });
+    }
   }
   progressBox((progress['total']*100).toFixed(2), 'topright').addTo(map)
   progressBoxCountdown((parseInt(progressCountdown['total'])), 'topright').addTo(map)

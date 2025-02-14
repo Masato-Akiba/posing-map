@@ -4,6 +4,18 @@ async function getAreaList() {
   return arealist;
 }
 
+async function getPostingList() {
+  const postinglistResponse = await fetch('/data/postinglist.json');
+  const postinglist = await postinglistResponse.json();
+  return postinglist;
+}
+
+async function getPostingProgress() {
+  const progressResponse = await fetch('/data/posting_progress.json');
+  const progress = await progressResponse.json();
+  return progress;
+}
+
 async function getProgress() {
   const progressResponse = await fetch('/data/summary.json');
   const progress = await progressResponse.json();
