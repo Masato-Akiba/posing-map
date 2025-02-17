@@ -101,7 +101,7 @@ Promise.all([getPostingList(), getPostingProgress(), getProgressCountdown()]).th
               const polygon = L.geoJSON(data, {
                 style: getGeoJsonStyle(progress[key]["progresses"][0]),
               });
-              polygon.bindPopup(`<b>${areaInfo['area_name']}</b><br>ポスター貼り進捗: ${(progress[key]["progresses"][0] * 100).toFixed(1)}%<br>担当:<br>実施日:<br>備考:${progress[key]["notes"]}`);
+              polygon.bindPopup(`<b>${areaInfo['area_name']}</b><br>ポスティング進捗: ${(progress[key]["progresses"][0] * 100).toFixed(1)}%<br>担当:<br>実施日:<br>備考:${progress[key]["notes"]}`);
               polygon.addTo(map);
             })
             .catch((error) => {
