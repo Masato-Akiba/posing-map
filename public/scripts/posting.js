@@ -99,9 +99,9 @@ Promise.all([getPostingList(), getPostingProgress(), getProgressCountdown()]).th
             })
             .then((data) => {
               const polygon = L.geoJSON(data, {
-                style: getGeoJsonStyle(progress[key]),
+                style: getGeoJsonStyle(progress[key]["progresses"][0]),
               });
-              polygon.bindPopup(`<b>${areaInfo['area_name']}</b><br>ポスター貼り進捗: ${(progress[key]*100).toFixed(1)}%<br>残り: ${progressCountdown[key]}ヶ所`);
+              polygon.bindPopup(`<b>${areaInfo['area_name']}</b><br>ポスター貼り進捗: ${(progress[key]["progresses"][0] * 100).toFixed(1)}%<br>担当:<br>実施日:<br>備考:${progress[key]["notes"]}`);
               polygon.addTo(map);
             })
             .catch((error) => {
@@ -117,11 +117,11 @@ Promise.all([getPostingList(), getPostingProgress(), getProgressCountdown()]).th
               return response.json();
             })
             .then((data) => {
-              const polygon = L.geoJSON(data, {
-                style: getGeoJsonStyle(progress[key]),
-              });
-              polygon.bindPopup(`<b>${areaInfo['area_name']}${cho_number}丁目</b><br>ポスティング進捗: ${(progress[key]*100).toFixed(1)}%<br>残り: ${progressCountdown[key]}枚`);
-              polygon.addTo(map);
+                const polygon = L.geoJSON(data, {
+                  style: getGeoJsonStyle(progress[key]["progresses"][cho_index]),
+                });
+                polygon.bindPopup(`<b>${areaInfo['area_name']}${cho_number}丁目</b><br>ポスティング進捗: ${(progress[key]["progresses"][cho_index] * 100).toFixed(1)}%<br>担当:<br>実施日:<br>備考:${progress[key]["notes"]}`);
+                polygon.addTo(map);
             })
             .catch((error) => {
               console.error('Error fetching geojson:', error);
@@ -130,7 +130,6 @@ Promise.all([getPostingList(), getPostingProgress(), getProgressCountdown()]).th
     }
   }
   progressBox((progress['total']*100).toFixed(2), 'topright').addTo(map)
-  progressBoxCountdown((parseInt(progressCountdown['total'])), 'topright').addTo(map)
   legend().addTo(map);
 }).catch((error) => {
   console.error('Error in fetching data:', error);
