@@ -78,17 +78,17 @@ function getGeoJsonStyle(progress) {
 let areaList;
 let progress;
 
-Promise.all([getPostingList(), getPostingProgress(), getProgressCountdown()]).then(function(res) {
+Promise.all([getPostingList(), getPostingProgress()]).then(function(res) {
   areaList = res[0];
   progress = res[1];
-  progressCountdown = res[2];
 
   for (let [key, areaInfo] of Object.entries(areaList)) {
     console.log(areaInfo['area_name']);
-    console.log(areaInfo['area_cho_max_number']);
     let cho_max_number = Number(areaInfo['area_cho_max_number']);
+
     for(let cho_index = 0; cho_index < cho_max_number; cho_index++){
     let cho_number = cho_index + 1;
+    // 丁がない場合
     if(cho_max_number === 1){
             fetch(`https://uedayou.net/loa/東京都足立区${areaInfo['area_name']}.geojson`)
             .then((response) => {
@@ -108,7 +108,10 @@ Promise.all([getPostingList(), getPostingProgress(), getProgressCountdown()]).th
               console.error('Error fetching geojson:', error);
             });   
             break;
-        }else{
+        }
+        else
+    // 丁が1丁目2丁目・・・とある場合
+        {
             fetch(`https://uedayou.net/loa/東京都足立区${areaInfo['area_name']}${cho_number}丁目.geojson`)
             .then((response) => {
               if (!response.ok) {
