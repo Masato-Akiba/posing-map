@@ -33,12 +33,12 @@ function getProgressColor(percentage) {
 
     // Define the color stops
     const colorStops = [
-        { pct: 0.0, color: { r: 254, g: 237, b: 222 } }, // #feedde
-        { pct: 0.25, color: { r: 253, g: 190, b: 133 } }, // #fdbe85
-        { pct: 0.5, color: { r: 253, g: 141, b: 60 } }, // #fd8d3c
-        { pct: 0.75, color: { r: 230, g: 85, b: 13 } }, // #e6550d
-        { pct: 0.999, color: { r: 166, g: 54, b: 3 } }, // #a63603
-        { pct: 1.0, color: { r: 150, g: 0, b: 73 } } // #a63603
+        { pct: 0.0, color: { r: 227, g: 250, b: 254 } }, // #feedde
+        { pct: 0.25, color: { r: 210, g: 237, b: 253 } }, // #fdbe85
+        { pct: 0.5, color: { r: 115, g: 197, b: 251 } }, // #fd8d3c
+        { pct: 0.75, color: { r: 266, g: 176, b: 250 } }, // #e6550d
+        { pct: 0.999, color: { r: 12, g: 153, b: 247 } }, // #a63603
+        { pct: 1.0, color: { r: 4, g: 97, b: 159 } } // #a63603
     ];
 
     // Ensure percentage is within bounds
