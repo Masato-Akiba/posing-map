@@ -111,7 +111,7 @@ Promise.all([getPostingList(), getPostingProgress()]).then(function(res) {
               const polygon = L.geoJSON(data, {
                 style: progress[key]["is_working"][0] ? getGeoJsonStyleIsWorking() : getGeoJsonStyle(progress[key]["progresses"][0]),
               });
-              polygon.bindPopup(`<b>${areaInfo['area_name']}</b><br>ポスティング進捗: ${(progress[key]["progresses"][0] * 100).toFixed(1)}%<br>担当:<br>実施日:<br>備考:${progress[key]["notes"]}`);
+              polygon.bindPopup(`<b>${areaInfo['area_name']}</b><br>ポスティング進捗: ${(progress[key]["progresses"][0] * 100).toFixed(1)}%<br>担当:${progress[key]["executer"][0]}<br>実施日:${progress[key]["posting_date"][0]}<br>備考:${progress[key]["notes"][0]}`);
               polygon.addTo(map);
             })
             .catch((error) => {
@@ -133,7 +133,7 @@ Promise.all([getPostingList(), getPostingProgress()]).then(function(res) {
                 const polygon = L.geoJSON(data, {
                   style: progress[key]["is_working"][cho_index] ? getGeoJsonStyleIsWorking() : getGeoJsonStyle(progress[key]["progresses"][cho_index]),
                 });
-                polygon.bindPopup(`<b>${areaInfo['area_name']}${cho_number}丁目</b><br>ポスティング進捗: ${(progress[key]["progresses"][cho_index] * 100).toFixed(1)}%<br>担当:<br>実施日:<br>備考:${progress[key]["notes"]}`);
+                polygon.bindPopup(`<b>${areaInfo['area_name']}${cho_number}丁目</b><br>ポスティング進捗: ${(progress[key]["progresses"][cho_index] * 100).toFixed(1)}%<br>担当:${progress[key]["executer"][cho_index]}<br>実施日:${progress[key]["posting_date"][cho_index]}<br>備考:${progress[key]["notes"][cho_index]}`);
                 polygon.addTo(map);
             })
             .catch((error) => {
