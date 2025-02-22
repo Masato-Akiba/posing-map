@@ -23,6 +23,7 @@ function legend() {
       for (var i = 0; i < grades.length; i++) {
         labelsDiv.innerHTML += '<span>' + grades[i] * 100 + '%</span>';
       }
+      labelsDiv.innerHTML += '<span>投函予定</span>'
       return div;
   };
 
@@ -33,12 +34,12 @@ function getProgressColor(percentage) {
 
     // Define the color stops
     const colorStops = [
-        { pct: 0.0, color: { r: 227, g: 250, b: 254 } }, // #feedde
-        { pct: 0.25, color: { r: 210, g: 237, b: 253 } }, // #fdbe85
-        { pct: 0.5, color: { r: 115, g: 197, b: 251 } }, // #fd8d3c
-        { pct: 0.75, color: { r: 266, g: 176, b: 250 } }, // #e6550d
-        { pct: 0.999, color: { r: 12, g: 153, b: 247 } }, // #a63603
-        { pct: 1.0, color: { r: 4, g: 97, b: 159 } } // #a63603
+        { pct: 0.0, color: { r: 227, g: 250, b: 254 } }, // #E3FAFE
+        { pct: 0.25, color: { r: 210, g: 237, b: 253 } }, // #D2EDFD
+        { pct: 0.5, color: { r: 115, g: 197, b: 251 } }, // #73C5FB
+        { pct: 0.75, color: { r: 66, g: 176, b: 250 } }, // #42B0FA
+        { pct: 0.999, color: { r: 12, g: 153, b: 247 } }, // #0C99F7
+        { pct: 1.0, color: { r: 4, g: 97, b: 159 } } // #04619F
     ];
 
     // Ensure percentage is within bounds
@@ -75,6 +76,15 @@ function getGeoJsonStyle(progress) {
   }
 }
 
+  function getGeoJsonStyleIsWorking(){
+      return {
+      color: 'black',
+      fillColor: `rgb(255, 214, 102)`,
+      fillOpacity: 0.7,
+      weight: 2,  
+  }
+}
+
 let areaList;
 let progress;
 
@@ -99,7 +109,7 @@ Promise.all([getPostingList(), getPostingProgress()]).then(function(res) {
             })
             .then((data) => {
               const polygon = L.geoJSON(data, {
-                style: getGeoJsonStyle(progress[key]["progresses"][0]),
+                style: progress[key]["is_working"][0] ? getGeoJsonStyleIsWorking() : getGeoJsonStyle(progress[key]["progresses"][0]),
               });
               polygon.bindPopup(`<b>${areaInfo['area_name']}</b><br>ポスティング進捗: ${(progress[key]["progresses"][0] * 100).toFixed(1)}%<br>担当:<br>実施日:<br>備考:${progress[key]["notes"]}`);
               polygon.addTo(map);
@@ -121,7 +131,7 @@ Promise.all([getPostingList(), getPostingProgress()]).then(function(res) {
             })
             .then((data) => {
                 const polygon = L.geoJSON(data, {
-                  style: getGeoJsonStyle(progress[key]["progresses"][cho_index]),
+                  style: progress[key]["is_working"][cho_index] ? getGeoJsonStyleIsWorking() : getGeoJsonStyle(progress[key]["progresses"][cho_index]),
                 });
                 polygon.bindPopup(`<b>${areaInfo['area_name']}${cho_number}丁目</b><br>ポスティング進捗: ${(progress[key]["progresses"][cho_index] * 100).toFixed(1)}%<br>担当:<br>実施日:<br>備考:${progress[key]["notes"]}`);
                 polygon.addTo(map);
